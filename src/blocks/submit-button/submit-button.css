@@ -1,0 +1,34 @@
+.submit-button {
+    display: block;
+    background: black;
+    color: white;
+    width: 100%;
+    height: 50px;
+    max-width: 358px;
+    margin: 18px auto 37px;
+    padding: 0;
+    box-shadow: none;
+    cursor: pointer;
+    font-family: 'inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    border: none;
+    box-sizing: border-box;
+    transition: opacity 0.5s;
+}
+
+.submit-button:hover {
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .submit-button {
+        max-width: 238px;
+        height: 46px;
+        font-size: 14px;
+        line-height: 17px;
+        margin: 13px auto 25px;
+    }
+ }

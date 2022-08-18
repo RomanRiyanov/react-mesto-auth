@@ -1,0 +1,10 @@
+.place-input-error {
+    top: 140px;
+}
+
+
+@media (max-width: 768px) {
+    .place-input-error {
+        top: 152px;
+    }
+ }
