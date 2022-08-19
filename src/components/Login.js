@@ -7,14 +7,17 @@ function Login ({
    onLogin
 }) {
     
-    const [username, setUsername] = useState('');
+    // const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
     const [message, setMessage] = useState('');
     const history = useHistory();
 
 
     const resetForm = () => {
-        setUsername('');
+        // setUsername('');
+        setEmail('');
         setPassword('');
         setMessage('');
       };
@@ -22,7 +25,7 @@ function Login ({
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        onLogin({ username, password })
+        onLogin({ /*username*/email, password })
           .then(resetForm)
           .then(() => history.push('/ducks'))
           .catch((err) => setMessage(err.message || 'Что-то пошло не так'));
@@ -31,7 +34,7 @@ function Login ({
     return (
         <div className="auth">
 
-        <h1 className="welcome">Вход</h1>
+        <h2 className="welcome">Вход</h2>
 
         {/* <p className="auth__error">
           {message}
@@ -46,8 +49,8 @@ function Login ({
             name="email"
             placeholder='Email'
             type="text"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
+            value={email}
+            onChange={e => setEmail(e.target.value)}
           />
           {/* <label className="label" htmlFor="password">
             Пароль
@@ -65,9 +68,9 @@ function Login ({
             <button type="submit" className="auth__link">Войти</button>
           </div>
         </form>
-        <div className="auth__signup">
+        {/* <div className="auth__signup">
           <Link to="/register" className="signup__link">Уже зарегистрированы? Войти</Link>
-        </div>
+        </div> */}
       </div>
     )
 }

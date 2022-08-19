@@ -14,6 +14,7 @@ import EditAvatarPopup from "./EditAvatarPopup";
 import PopupWithImage from './PopupWithImage';
 
 import Login from './Login';
+import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
 
 import { api } from "../utils/Api";
@@ -191,6 +192,9 @@ function App() {
 
     }
 
+    function onRegister() {
+
+    }
 
 
 
@@ -217,6 +221,8 @@ function App() {
                     isLoaded={isLoaded}>
                 </Main>  */}
 
+
+
                 <ProtectedRoute 
                     exact path='/'
                     onEditAvatar = {onEditAvatar} 
@@ -229,25 +235,30 @@ function App() {
                     cards={cards}
                     isLoaded={isLoaded}
                     loggedIn={loggedIn}
-
                     component={Main}
+                    header={Header}
+                    footer={Footer}
                 />
 
-
-
-
-                <Route exact path='/login'>
-                    <Header />
+                <Route path='/login'>
+                    <Header/>
                     <div className="authContainer">
                         <Login onLogin={onLogin} />
                     </div>
+                    <Footer />
                 </Route>
                 
+                <Route path='/register'>
+                    <Header/>
+                    <div className="authContainer">
+                        <Register onRegister={onRegister} />
+                    </div>
+                    <Footer />
+                </Route>
 
+               
 
-
-
-                <Footer />
+                {/* <Footer /> */}
 
                 <EditProfilePopup isLoaded={isLoaded} onUpdateUser={handleUpdateUser} onCloseButton = {closeAllPopups} isOpen={isEditProfilePopupOpen} />
 
