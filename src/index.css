@@ -50,3 +50,6 @@
 @import url(./blocks/place-input-error/place-input-error.css);
 @import url(./blocks/url-input-error/url-input-error.css);
 @import url(./blocks/avatar-input-error/avatar-input-error.css);
+
+
+@import url(./blocks/auth/auth.css);

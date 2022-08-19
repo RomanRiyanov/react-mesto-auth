@@ -1,4 +1,10 @@
 import React, { useEffect } from "react";
+import {
+    Route,
+    Switch,
+    Redirect,
+    useHistory
+  } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
@@ -6,6 +12,10 @@ import AddPlacePopup from "./AddPlacePopup";
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from "./EditAvatarPopup";
 import PopupWithImage from './PopupWithImage';
+
+import Login from './Login';
+import ProtectedRoute from "./ProtectedRoute";
+
 import { api } from "../utils/Api";
 import {CurrentUserContext} from '../context/CurrentUserContext';
 
@@ -171,38 +181,84 @@ function App() {
         });   
     }, []);
 
+
+
+    const [loggedIn, setLoggedIn] = React.useState(false);
+    const history = useHistory();
+
+
+    function onLogin() {
+
+    }
+
+
+
+
+
+
   return (
     
       <div className="body">
         <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
+            <Switch>
 
-            <Header />
+                {/* <Header /> */}
 
-            <Main 
-                onEditAvatar = {onEditAvatar} 
-                onEditProfile = {onEditProfile}
-                onAddPlace = {onAddPlace}
-                onCloseButton = {closeAllPopups}
-                onCardClick={handleCardClick}
-                onCardDelete={handleDeleteClick}
-                onCardLike={handleCardLike}
-                cards={cards}
-                isLoaded={isLoaded}>
-            </Main> 
+                {/* <Main 
+                    onEditAvatar = {onEditAvatar} 
+                    onEditProfile = {onEditProfile}
+                    onAddPlace = {onAddPlace}
+                    onCloseButton = {closeAllPopups}
+                    onCardClick={handleCardClick}
+                    onCardDelete={handleDeleteClick}
+                    onCardLike={handleCardLike}
+                    cards={cards}
+                    isLoaded={isLoaded}>
+                </Main>  */}
 
-            <Footer />
+                <ProtectedRoute 
+                    exact path='/'
+                    onEditAvatar = {onEditAvatar} 
+                    onEditProfile = {onEditProfile}
+                    onAddPlace = {onAddPlace}
+                    onCloseButton = {closeAllPopups}
+                    onCardClick={handleCardClick}
+                    onCardDelete={handleDeleteClick}
+                    onCardLike={handleCardLike}
+                    cards={cards}
+                    isLoaded={isLoaded}
+                    loggedIn={loggedIn}
 
-            <EditProfilePopup isLoaded={isLoaded} onUpdateUser={handleUpdateUser} onCloseButton = {closeAllPopups} isOpen={isEditProfilePopupOpen} />
+                    component={Main}
+                />
 
-            <AddPlacePopup isLoaded={isLoaded} onCardAdd={handleAddPlaceSubmit} onCloseButton = {closeAllPopups} isOpen={isAddPlacePopupOpen} />
 
-            <EditAvatarPopup isLoaded={isLoaded} onUpdateAvatar={handleUpdateAvatar} onCloseButton = {closeAllPopups} isOpen={isEditAvatarPopupOpen} />
+
+
+                <Route exact path='/login'>
+                    <Header />
+                    <div className="authContainer">
+                        <Login onLogin={onLogin} />
+                    </div>
+                </Route>
                 
-            <PopupWithImage isLoaded={isLoaded} onClose={closeAllPopups} card={selectedCard} isOpen={isImagePopupOpen}></PopupWithImage>
 
 
 
+
+                <Footer />
+
+                <EditProfilePopup isLoaded={isLoaded} onUpdateUser={handleUpdateUser} onCloseButton = {closeAllPopups} isOpen={isEditProfilePopupOpen} />
+
+                <AddPlacePopup isLoaded={isLoaded} onCardAdd={handleAddPlaceSubmit} onCloseButton = {closeAllPopups} isOpen={isAddPlacePopupOpen} />
+
+                <EditAvatarPopup isLoaded={isLoaded} onUpdateAvatar={handleUpdateAvatar} onCloseButton = {closeAllPopups} isOpen={isEditAvatarPopupOpen} />
+                    
+                <PopupWithImage isLoaded={isLoaded} onClose={closeAllPopups} card={selectedCard} isOpen={isImagePopupOpen}></PopupWithImage>
+
+
+            </Switch>
         </CurrentUserContext.Provider>
         </div>
 
