@@ -5,26 +5,27 @@ function Register ({
     onRegister
 }) {
     
-    const [username, setUsername] = useState('');
+    // const [username, setUsername] = useState('');
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [confirmPassword, setConfirmPassword] = useState('');
+    // const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
     const history = useHistory();
 
 
     const resetForm = () => {
-        setUsername('');
+        // setUsername('');
         setPassword('');
+        setEmail('');
         setMessage('');
       };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        onRegister({ username, password })
+        onRegister({ email, password })
           .then(resetForm)
           .then(() => history.push('/ducks'))
           .catch((err) => setMessage(err.message || 'Что-то пошло не так'));

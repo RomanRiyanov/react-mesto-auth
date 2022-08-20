@@ -20,14 +20,14 @@ function Header() {
           <Route exact path='/'>
             <div className='header__link'>
               <p>ЭЭЭЭЭЭЭЭКСПЕИМЕНТЭ</p>
-              <Link className='header__link' to='/login'>Выйти</Link>
+              <Link className='header__link' to='/sign-in'>Выйти</Link>
             </div>
           </Route>
-          <Route exact path='/register'>
-            <Link className='header__link' to='/login'>Войти</Link>
+          <Route exact path='/sign-up'>
+            <Link className='header__link' to='/sign-in'>Войти</Link>
           </Route>
-          <Route exact path='/login'>
-            <Link className='header__link' to='/register'>Зарегистироваться</Link>
+          <Route exact path='/sign-in'>
+            <Link className='header__link' to='/sign-up'>Зарегистироваться</Link>
           </Route>
         </Switch>
     </section>

@@ -240,7 +240,7 @@ function App() {
                     footer={Footer}
                 />
 
-                <Route path='/login'>
+                <Route path='/sign-in'>
                     <Header/>
                     <div className="authContainer">
                         <Login onLogin={onLogin} />
@@ -248,7 +248,7 @@ function App() {
                     <Footer />
                 </Route>
                 
-                <Route path='/register'>
+                <Route path='/sign-up'>
                     <Header/>
                     <div className="authContainer">
                         <Register onRegister={onRegister} />

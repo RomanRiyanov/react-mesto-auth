@@ -18,7 +18,7 @@ const ProtectedRoute = (
                     <Footer/>
                 </>)
             } 
-             else return <Redirect to="./register" />
+             else return <Redirect to="./sign-in" />
         }
     }
     </Route>
