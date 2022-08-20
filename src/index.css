@@ -4,6 +4,7 @@
 @import url(./blocks/page/page.css);
 @import url(./blocks/header/header.css);
 @import url(./blocks/header/__logo/header__logo.css);
+@import url(./blocks/header/__link/header__link.css);
 @import url(./blocks/main/main.css);
 @import url(./blocks/profile/profile.css);
 @import url(./blocks/profile/__image/profile__image.css);
@@ -50,3 +51,6 @@
 @import url(./blocks/place-input-error/place-input-error.css);
 @import url(./blocks/url-input-error/url-input-error.css);
 @import url(./blocks/avatar-input-error/avatar-input-error.css);
+
+
+@import url(./blocks/auth/auth.css);
