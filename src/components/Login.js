@@ -11,7 +11,7 @@ function Login ({
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [message, setMessage] = useState('');
+    // const [message, setMessage] = useState('');
     const history = useHistory();
 
 
@@ -19,16 +19,16 @@ function Login ({
         // setUsername('');
         setEmail('');
         setPassword('');
-        setMessage('');
+        // setMessage('');
       };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        event.preventDefault();
     
         onLogin({ /*username*/email, password })
           .then(resetForm)
-          .then(() => history.push('/ducks'))
-          .catch((err) => setMessage(err.message || 'Что-то пошло не так'));
+          .then(() => history.push('/'))
+          .catch((err) => alert('попап с ошибкой LOGIN' `${err.message}`));
       };
 
     return (

@@ -7,7 +7,7 @@ import {
   } from 'react-router-dom';
 import logoPath from '../images/logo.svg';
 
-function Header() {
+function Header(props) {
   return (
     <section className="header">
         <img className="header__logo" src={logoPath} alt="Логотип Mesto" />
@@ -19,7 +19,7 @@ function Header() {
           </Route> */}
           <Route exact path='/'>
             <div className='header__link'>
-              <p>ЭЭЭЭЭЭЭЭКСПЕИМЕНТЭ</p>
+              <p>{props.headerEmail}</p>
               <Link className='header__link' to='/sign-in'>Выйти</Link>
             </div>
           </Route>

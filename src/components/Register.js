@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import InfoTooltip from './InfoTooltip';
 
 function Register ({
     onRegister
@@ -11,7 +12,7 @@ function Register ({
     const [password, setPassword] = useState('');
 
     // const [confirmPassword, setConfirmPassword] = useState('');
-    const [message, setMessage] = useState('');
+    // const [message, setMessage] = useState('');
     const history = useHistory();
 
 
@@ -19,20 +20,20 @@ function Register ({
         // setUsername('');
         setPassword('');
         setEmail('');
-        setMessage('');
+        // setMessage('');
       };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        event.preventDefault();
     
         onRegister({ email, password })
+          .then(() => history.push('/sign-in'))
           .then(resetForm)
-          .then(() => history.push('/ducks'))
-          .catch((err) => setMessage(err.message || 'Что-то пошло не так'));
+          .catch((err) => alert('попап с ошибкой REGISTER' `${err.message}`));
       };
 
     return (
-        <div className="auth">
+      <div className="auth">
 
         <h2 className="welcome">Регистрирация</h2>
 
@@ -62,8 +63,16 @@ function Register ({
           </div>
         </form>
         <div className="auth__signup">
-          <Link to="/login" className="signup__link">Уже зарегистрированы? Войти</Link>
+          <Link to="/sign-in" className="signup__link">Уже зарегистрированы? Войти</Link>
         </div>
+
+        <InfoTooltip 
+             isTipOpen = {true}
+             onCloseButton = {e => console.log('сим сим закройся')}
+             isSuccess = {false}
+        />
+
+
       </div>
     )
 }

@@ -16,6 +16,7 @@ import PopupWithImage from './PopupWithImage';
 import Login from './Login';
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
+import * as auth from './Auth';
 
 import { api } from "../utils/Api";
 import {CurrentUserContext} from '../context/CurrentUserContext';
@@ -185,16 +186,47 @@ function App() {
 
 
     const [loggedIn, setLoggedIn] = React.useState(false);
+    const [headerEmail, setHeaderEmail] = React.useState('');
     const history = useHistory();
 
 
-    function onLogin() {
-
+    function onRegister({ email, password }) {
+        return auth.register({ email, password })
+        .then((res) => {
+            if (!res) throw new Error ('Сработала ошибка в App.js REGISTER');
+            return res;
+        })
     }
 
-    function onRegister() {
-
+    function onLogin({ email, password }) {
+        return auth.authorize({ email, password })
+        .then((res) => {
+            if (!res) throw new Error ('Сработала ошибка в App.js LOGIN');
+            if (res.jwt) {
+                setLoggedIn(true);
+                localStorage.setItem('jwt', res.jwt);
+            }
+        })
     }
+
+    function tokenCheck (jwt) {
+        return auth.getContent(jwt)
+        .then((res) => {
+            if (res) {
+                setLoggedIn(true);
+                setHeaderEmail(res.email);
+            }
+        })
+    }
+
+
+    React.useEffect(() => {
+        const jwt = localStorage.getItem('jwt');
+
+        if (jwt) {
+            tokenCheck(jwt);
+        }
+    }, [loggedIn]);
 
 
 
@@ -238,6 +270,7 @@ function App() {
                     component={Main}
                     header={Header}
                     footer={Footer}
+                    headerEmail={headerEmail}
                 />
 
                 <Route path='/sign-in'>
