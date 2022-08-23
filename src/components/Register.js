@@ -1,36 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import InfoTooltip from './InfoTooltip';
 
 function Register ({
-    onRegister
+    onRegister,
 }) {
-    
-    // const [username, setUsername] = useState('');
-    
+        
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    // const [confirmPassword, setConfirmPassword] = useState('');
-    // const [message, setMessage] = useState('');
+    const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
+    const [isRegisterSucceed, setRegisterSucceed] = React.useState(false);
+
     const history = useHistory();
 
-
     const resetForm = () => {
-        // setUsername('');
         setPassword('');
         setEmail('');
-        // setMessage('');
       };
 
     const handleSubmit = (event) => {
         event.preventDefault();
     
         onRegister({ email, password })
-          .then(() => history.push('/sign-in'))
-          .then(resetForm)
-          .catch((err) => alert('попап с ошибкой REGISTER' `${err.message}`));
+          .then(() => {
+            history.push('/sign-in');
+            setRegisterSucceed(true);
+            setInfoTooltipOpen(true);
+          })
+          .then(() => {
+            resetForm();
+          })
+          .catch((err) => {
+              setRegisterSucceed(false);
+              console.log(`Ошибка при регистрации ${err}`);
+              setInfoTooltipOpen(true);
+            })
       };
+
+    const closeInfoTooltip = () => {
+      setInfoTooltipOpen(false);
+    }
+
+    React.useEffect(() => {
+      function handleEscapeClose(event) {
+          if (event.key === 'Escape') {
+            closeInfoTooltip()
+          }
+      }
+      document.addEventListener('keydown', handleEscapeClose);
+
+      return () => {
+          document.removeEventListener('keydown', handleEscapeClose);
+      }
+    }, [])
 
     return (
       <div className="auth">
@@ -67,11 +90,10 @@ function Register ({
         </div>
 
         <InfoTooltip 
-             isTipOpen = {true}
-             onCloseButton = {e => console.log('сим сим закройся')}
-             isSuccess = {false}
+            isOpen = {isInfoTooltipOpen}
+            isSuccess = {isRegisterSucceed}
+            onClose={closeInfoTooltip}
         />
-
 
       </div>
     )
