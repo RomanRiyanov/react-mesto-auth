@@ -1,48 +1,66 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-
-//import './styles/Login.css';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import InfoTooltip from './InfoTooltip';
 
 function Login ({
-   onLogin
+    onLogin
 }) {
     
-    // const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [message, setMessage] = useState('');
+    const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
+    const [isRegisterSucceed, setRegisterSucceed] = React.useState(false);
+
     const history = useHistory();
 
-
     const resetForm = () => {
-        // setUsername('');
         setEmail('');
         setPassword('');
-        setMessage('');
       };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        event.preventDefault();
     
-        onLogin({ /*username*/email, password })
-          .then(resetForm)
-          .then(() => history.push('/ducks'))
-          .catch((err) => setMessage(err.message || 'Что-то пошло не так'));
+        onLogin({ email, password })
+          .then(() => {
+            history.push('/');
+            setRegisterSucceed(true);
+          })
+         .then(() => {
+            resetForm();
+          })
+          .catch((err) => {
+            setRegisterSucceed(false);
+            console.log(`Ошибка при авторизации ${err}`);
+            setInfoTooltipOpen(true);
+          });
       };
+
+      const closeInfoTooltip = () => {
+        setInfoTooltipOpen(false);
+      }
+  
+      React.useEffect(() => {
+        function handleEscapeClose(event) {
+            if (event.key === 'Escape') {
+              closeInfoTooltip()
+            }
+        }
+        document.addEventListener('keydown', handleEscapeClose);
+
+        return () => {
+            document.removeEventListener('keydown', handleEscapeClose);
+        }
+      }, [])
 
     return (
         <div className="auth">
 
         <h2 className="welcome">Вход</h2>
 
-        {/* <p className="auth__error">
-          {message}
-        </p> */}
         <form className="auth__form" onSubmit={handleSubmit}>
-          {/* <label className="label" htmlFor="email">
-            Email
-          </label> */}
+
           <input
             id="email"
             required
@@ -52,9 +70,7 @@ function Login ({
             value={email}
             onChange={e => setEmail(e.target.value)}
           />
-          {/* <label className="label" htmlFor="password">
-            Пароль
-          </label> */}
+
           <input
             id="password"
             required
@@ -64,13 +80,18 @@ function Login ({
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
+
           <div className="auth__button-container">
             <button type="submit" className="auth__link">Войти</button>
           </div>
         </form>
-        {/* <div className="auth__signup">
-          <Link to="/register" className="signup__link">Уже зарегистрированы? Войти</Link>
-        </div> */}
+
+      <InfoTooltip 
+            isOpen = {isInfoTooltipOpen}
+            isSuccess = {isRegisterSucceed}
+            onClose={closeInfoTooltip}
+        />
+
       </div>
     )
 }

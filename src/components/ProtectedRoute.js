@@ -13,12 +13,12 @@ const ProtectedRoute = (
             if (props.loggedIn === true) {
                 return (
                 <>
-                    <Header/> 
+                    <Header headerEmail={props.headerEmail}/> 
                     <Component {...props}/>
                     <Footer/>
                 </>)
             } 
-             else return <Redirect to="./register" />
+             else return <Redirect to="./sign-in" />
         }
     }
     </Route>

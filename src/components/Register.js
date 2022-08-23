@@ -1,37 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import InfoTooltip from './InfoTooltip';
 
 function Register ({
-    onRegister
+    onRegister,
 }) {
-    
-    const [username, setUsername] = useState('');
-    
+        
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [message, setMessage] = useState('');
+    const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
+    const [isRegisterSucceed, setRegisterSucceed] = React.useState(false);
+
     const history = useHistory();
 
-
     const resetForm = () => {
-        setUsername('');
         setPassword('');
-        setMessage('');
+        setEmail('');
       };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        event.preventDefault();
     
-        onRegister({ username, password })
-          .then(resetForm)
-          .then(() => history.push('/ducks'))
-          .catch((err) => setMessage(err.message || 'Что-то пошло не так'));
+        onRegister({ email, password })
+          .then(() => {
+            history.push('/sign-in');
+            setRegisterSucceed(true);
+            setInfoTooltipOpen(true);
+          })
+          .then(() => {
+            resetForm();
+          })
+          .catch((err) => {
+              setRegisterSucceed(false);
+              console.log(`Ошибка при регистрации ${err}`);
+              setInfoTooltipOpen(true);
+            })
       };
+
+    const closeInfoTooltip = () => {
+      setInfoTooltipOpen(false);
+    }
+
+    React.useEffect(() => {
+      function handleEscapeClose(event) {
+          if (event.key === 'Escape') {
+            closeInfoTooltip()
+          }
+      }
+      document.addEventListener('keydown', handleEscapeClose);
+
+      return () => {
+          document.removeEventListener('keydown', handleEscapeClose);
+      }
+    }, [])
 
     return (
-        <div className="auth">
+      <div className="auth">
 
         <h2 className="welcome">Регистрирация</h2>
 
@@ -61,8 +86,15 @@ function Register ({
           </div>
         </form>
         <div className="auth__signup">
-          <Link to="/login" className="signup__link">Уже зарегистрированы? Войти</Link>
+          <Link to="/sign-in" className="signup__link">Уже зарегистрированы? Войти</Link>
         </div>
+
+        <InfoTooltip 
+            isOpen = {isInfoTooltipOpen}
+            isSuccess = {isRegisterSucceed}
+            onClose={closeInfoTooltip}
+        />
+
       </div>
     )
 }

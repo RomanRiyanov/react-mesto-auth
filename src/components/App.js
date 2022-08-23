@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
     Route,
     Switch,
-    Redirect,
     useHistory
   } from 'react-router-dom';
 import Header from './Header';
@@ -16,6 +15,8 @@ import PopupWithImage from './PopupWithImage';
 import Login from './Login';
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
+
+import * as auth from './Auth';
 
 import { api } from "../utils/Api";
 import {CurrentUserContext} from '../context/CurrentUserContext';
@@ -41,6 +42,10 @@ function App() {
 
     const [isLoaded, setIsLoaded] = React.useState(false);
 
+    const [loggedIn, setLoggedIn] = React.useState(false);
+    const [headerEmail, setHeaderEmail] = React.useState('');
+    const history = useHistory();
+
     function onEditAvatar() {
         setEditAvatarPopupOpen(!isEditAvatarPopupOpen);
     }
@@ -64,20 +69,6 @@ function App() {
         setAddPlacePopupOpen(false);
         setImagePopupOpen(false);
     }
-
-    React.useEffect(() => {
-        function handleEscapeClose(event) {
-            if (event.key === 'Escape') {
-                closeAllPopups()
-            }
-        }
-    
-        document.addEventListener('keydown', handleEscapeClose);
-
-        return () => {
-            document.removeEventListener('keydown', handleEscapeClose);
-        }
-    }, [])
 
     function handleUpdateUser (data) {
         setIsLoaded(true);
@@ -162,6 +153,50 @@ function App() {
         })
     }
 
+    function onRegister({ email, password }) {
+        return auth.register({ email, password })
+        .then((res) => {
+            if (!res) {
+                throw new Error ('Пользователь с таким email существует');
+            };
+            return res;
+        })
+    }
+
+    function onLogin({ email, password }) {
+        return auth.authorize({ email, password })
+        .then((res) => {
+            if (!res) {
+                throw new Error ('Неверный email или пароль');
+            }
+            if (res.token) {
+                setLoggedIn(true);
+                localStorage.setItem('jwt', res.token);
+            } else {
+                return;
+            }
+        })
+    }
+
+    function tokenCheck (jwt) {
+        return auth.getContent(jwt)
+        .then((res) => {
+            if (res) {
+                setHeaderEmail(res.data.email);
+                setLoggedIn(true);
+                history.push('/');
+            }
+        })
+    }
+
+    React.useEffect(() => {        
+        if (localStorage.getItem('jwt')) {
+            const jwt = localStorage.getItem('jwt');
+
+            tokenCheck(jwt);
+        }
+    }, [loggedIn]);
+
     React.useEffect(() => {
         api.getUserInfo()
         .then(userData => {
@@ -182,23 +217,18 @@ function App() {
         });   
     }, []);
 
+    React.useEffect(() => {
+        function handleEscapeClose(event) {
+            if (event.key === 'Escape') {
+                closeAllPopups()
+            }
+        }
+        document.addEventListener('keydown', handleEscapeClose);
 
-
-    const [loggedIn, setLoggedIn] = React.useState(false);
-    const history = useHistory();
-
-
-    function onLogin() {
-
-    }
-
-    function onRegister() {
-
-    }
-
-
-
-
+        return () => {
+            document.removeEventListener('keydown', handleEscapeClose);
+        }
+    }, [])
 
   return (
     
@@ -206,22 +236,6 @@ function App() {
         <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
             <Switch>
-
-                {/* <Header /> */}
-
-                {/* <Main 
-                    onEditAvatar = {onEditAvatar} 
-                    onEditProfile = {onEditProfile}
-                    onAddPlace = {onAddPlace}
-                    onCloseButton = {closeAllPopups}
-                    onCardClick={handleCardClick}
-                    onCardDelete={handleDeleteClick}
-                    onCardLike={handleCardLike}
-                    cards={cards}
-                    isLoaded={isLoaded}>
-                </Main>  */}
-
-
 
                 <ProtectedRoute 
                     exact path='/'
@@ -238,9 +252,15 @@ function App() {
                     component={Main}
                     header={Header}
                     footer={Footer}
-                />
+                    headerEmail={headerEmail}
+                >
+                    <EditProfilePopup isLoaded={isLoaded} onUpdateUser={handleUpdateUser} onCloseButton = {closeAllPopups} isOpen={isEditProfilePopupOpen} />
+                    <AddPlacePopup isLoaded={isLoaded} onCardAdd={handleAddPlaceSubmit} onCloseButton = {closeAllPopups} isOpen={isAddPlacePopupOpen} />
+                    <EditAvatarPopup isLoaded={isLoaded} onUpdateAvatar={handleUpdateAvatar} onCloseButton = {closeAllPopups} isOpen={isEditAvatarPopupOpen} />
+                    <PopupWithImage isLoaded={isLoaded} onClose={closeAllPopups} card={selectedCard} isOpen={isImagePopupOpen}></PopupWithImage>
+                </ProtectedRoute>
 
-                <Route path='/login'>
+                <Route path='/sign-in'>
                     <Header/>
                     <div className="authContainer">
                         <Login onLogin={onLogin} />
@@ -248,26 +268,13 @@ function App() {
                     <Footer />
                 </Route>
                 
-                <Route path='/register'>
+                <Route path='/sign-up'>
                     <Header/>
                     <div className="authContainer">
-                        <Register onRegister={onRegister} />
+                        <Register onRegister={onRegister}/>
                     </div>
                     <Footer />
                 </Route>
-
-               
-
-                {/* <Footer /> */}
-
-                <EditProfilePopup isLoaded={isLoaded} onUpdateUser={handleUpdateUser} onCloseButton = {closeAllPopups} isOpen={isEditProfilePopupOpen} />
-
-                <AddPlacePopup isLoaded={isLoaded} onCardAdd={handleAddPlaceSubmit} onCloseButton = {closeAllPopups} isOpen={isAddPlacePopupOpen} />
-
-                <EditAvatarPopup isLoaded={isLoaded} onUpdateAvatar={handleUpdateAvatar} onCloseButton = {closeAllPopups} isOpen={isEditAvatarPopupOpen} />
-                    
-                <PopupWithImage isLoaded={isLoaded} onClose={closeAllPopups} card={selectedCard} isOpen={isImagePopupOpen}></PopupWithImage>
-
 
             </Switch>
         </CurrentUserContext.Provider>
