@@ -8,14 +8,9 @@ export const register = (password, email) => {
         },
         body: JSON.stringify(password, email)
     })
-    .then((res) => {
-        try {
-          if (res.status === 200){
-            return res.json();
-          } 
-        } catch(error){
-          return (error)
-        }
+      .then((res) => {
+        if (res.ok) return res.json();
+        else return Promise.reject(`Ошибка ${res.status}`)
       })
       .then((res) => {
         return res;
@@ -32,14 +27,9 @@ export const authorize = (password, email) => {
         body: JSON.stringify(password, email)
     })
     .then((res) => {
-        try {
-          if (res.status === 200){
-            return res.json();
-          } 
-        } catch(error){
-          return (error)
-        }
-      })
+      if (res.ok) return res.json();
+      else return Promise.reject(`Ошибка ${res.status}`)
+    })
     .then((res) => {
         return res;
       })
@@ -55,13 +45,8 @@ export const getContent = (jwt) => {
         }
     })
     .then((res) => {
-        try {
-          if (res.status === 200){
-            return res.json();
-          } 
-        } catch(error){
-          return (error)
-        }
-      })
-      .catch((err) => console.log(`Ошибка: ${err}`))
+      if (res.ok) return res.json();
+      else return Promise.reject(`Ошибка ${res.status}`)
+    })
+    .catch((err) => console.log(`Ошибка: ${err}`))
 }

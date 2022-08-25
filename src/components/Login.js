@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import InfoTooltip from './InfoTooltip';
+import React, { useState, useEffect } from 'react';
 
 function Login ({
     onLogin
@@ -8,11 +6,6 @@ function Login ({
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
-    const [isRegisterSucceed, setRegisterSucceed] = React.useState(false);
-
-    const history = useHistory();
 
     const resetForm = () => {
         setEmail('');
@@ -23,36 +16,13 @@ function Login ({
         event.preventDefault();
     
         onLogin({ email, password })
-          .then(() => {
-            history.push('/');
-            setRegisterSucceed(true);
-          })
          .then(() => {
             resetForm();
           })
-          .catch((err) => {
-            setRegisterSucceed(false);
-            console.log(`Ошибка при авторизации ${err}`);
-            setInfoTooltipOpen(true);
+         .catch(err => {
+            console.log(err);
           });
       };
-
-      const closeInfoTooltip = () => {
-        setInfoTooltipOpen(false);
-      }
-  
-      React.useEffect(() => {
-        function handleEscapeClose(event) {
-            if (event.key === 'Escape') {
-              closeInfoTooltip()
-            }
-        }
-        document.addEventListener('keydown', handleEscapeClose);
-
-        return () => {
-            document.removeEventListener('keydown', handleEscapeClose);
-        }
-      }, [])
 
     return (
         <div className="auth">
@@ -85,13 +55,6 @@ function Login ({
             <button type="submit" className="auth__link">Войти</button>
           </div>
         </form>
-
-      <InfoTooltip 
-            isOpen = {isInfoTooltipOpen}
-            isSuccess = {isRegisterSucceed}
-            onClose={closeInfoTooltip}
-        />
-
       </div>
     )
 }

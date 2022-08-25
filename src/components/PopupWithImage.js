@@ -11,8 +11,8 @@ function PopupWithImage({
             <div className="popup__window-image">
                 <button onClick={onClose} aria-label="Закрыть" className="close-button" id="close-button_view-photo"></button>
                 <figure className="figure">
-                    <img className="popup__view-image" src={card ? card.link : null} alt={card ? card.name : null} />
-                    <figcaption className="popup__figcaption">{card ? card.name: null}</figcaption>
+                    <img className="popup__view-image" src={card?.link} alt={card?.name} />
+                    <figcaption className="popup__figcaption">{card?.name}</figcaption>
                 </figure>
             </div>
         </div>

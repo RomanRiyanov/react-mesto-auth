@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import InfoTooltip from './InfoTooltip';
+import { Link } from 'react-router-dom';
 
 function Register ({
     onRegister,
@@ -8,11 +7,6 @@ function Register ({
         
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
-    const [isRegisterSucceed, setRegisterSucceed] = React.useState(false);
-
-    const history = useHistory();
 
     const resetForm = () => {
         setPassword('');
@@ -24,36 +18,12 @@ function Register ({
     
         onRegister({ email, password })
           .then(() => {
-            history.push('/sign-in');
-            setRegisterSucceed(true);
-            setInfoTooltipOpen(true);
-          })
-          .then(() => {
             resetForm();
           })
-          .catch((err) => {
-              setRegisterSucceed(false);
-              console.log(`Ошибка при регистрации ${err}`);
-              setInfoTooltipOpen(true);
-            })
+          .catch(err => {
+            console.log(err);
+          });
       };
-
-    const closeInfoTooltip = () => {
-      setInfoTooltipOpen(false);
-    }
-
-    React.useEffect(() => {
-      function handleEscapeClose(event) {
-          if (event.key === 'Escape') {
-            closeInfoTooltip()
-          }
-      }
-      document.addEventListener('keydown', handleEscapeClose);
-
-      return () => {
-          document.removeEventListener('keydown', handleEscapeClose);
-      }
-    }, [])
 
     return (
       <div className="auth">
@@ -88,13 +58,6 @@ function Register ({
         <div className="auth__signup">
           <Link to="/sign-in" className="signup__link">Уже зарегистрированы? Войти</Link>
         </div>
-
-        <InfoTooltip 
-            isOpen = {isInfoTooltipOpen}
-            isSuccess = {isRegisterSucceed}
-            onClose={closeInfoTooltip}
-        />
-
       </div>
     )
 }
