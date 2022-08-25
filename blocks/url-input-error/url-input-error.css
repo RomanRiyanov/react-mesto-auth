@@ -1,0 +1,9 @@
+.url-input-error {
+    top: 210px;
+}
+
+@media (max-width: 768px) {
+    .url-input-error {
+        top: 215px;
+    }
+ }

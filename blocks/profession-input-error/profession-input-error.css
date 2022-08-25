@@ -1,0 +1,10 @@
+.profession-input-error {
+    top: 210px;
+}
+
+
+@media (max-width: 768px) {
+    .profession-input-error {
+        top: 215px;
+    }
+ }
