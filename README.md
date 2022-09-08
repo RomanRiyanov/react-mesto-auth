@@ -20,5 +20,5 @@
 
 **Mesto**
 
-* [Ссылка на сайт](https://romanriyanov.github.io/react-mesto-auth)
+* [Ссылка на сайт](https://romanriyanov.github.io/react-mesto-auth/#/)
 
